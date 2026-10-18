@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PitchLab</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="logo">
+        <span class="logo-mark">⚾</span>
+        <span>PitchLab</span>
+    </div>
+
+    <div class="topbar-subtitle">
+        MLB Statcast 기반 투구 레퍼토리 비교
+    </div>
+</header>
+
+
+<main class="container">
+
+    <!-- ============================= -->
+    <!-- SECTION 1 : 입력 -->
+    <!-- ============================= -->
+
+    <section id="input-section" class="page-section">
+
+        <div class="hero">
+            <div class="hero-badge">PITCH REPERTOIRE ANALYSIS</div>
+
+            <h1>
+                내 투구와 비슷한<br>
+                <span>MLB 투수</span>를 찾아보세요.
+            </h1>
+
+            <p>
+                구종, 평균 구속, 사용률을 입력하면
+                실제 MLB Statcast 데이터를 기준으로
+                비슷한 투수 Top 5를 찾아줍니다.
+            </p>
+        </div>
+
+
+        <div class="panel">
+
+            <div class="panel-header">
+                <div>
+                    <h2>내 투구 정보 입력</h2>
+
+                    <p>
+                        주요 구종과 평균 구속, 사용률을 입력해주세요.
+                    </p>
+                </div>
+
+                <div class="usage-total">
+                    <span>사용률 합계</span>
+                    <strong id="usage-total">0%</strong>
+                </div>
+            </div>
+
+
+            <!-- 구종 입력 영역 -->
+
+            <div class="table-header">
+                <div>구종</div>
+                <div>평균 구속</div>
+                <div>사용률</div>
+                <div></div>
+            </div>
+
+            <div id="pitch-list">
+
+                <!-- 기본 입력 3개 -->
+
+                <div class="pitch-row">
+
+                    <select class="pitch-type">
+                        <option value="FF">포심</option>
+                        <option value="SI">싱커</option>
+                        <option value="FC">커터</option>
+                        <option value="SL">슬라이더</option>
+                        <option value="ST">스위퍼</option>
+                        <option value="CU">커브</option>
+                        <option value="KC">너클커브</option>
+                        <option value="CH">체인지업</option>
+                        <option value="FS">스플리터</option>
+                    </select>
+
+                    <div class="input-with-unit">
+                        <input
+                            type="number"
+                            class="velocity-input"
+                            placeholder="140"
+                            min="0"
+                            max="200"
+                            step="0.1"
+                        >
+                        <span>km/h</span>
+                    </div>
+
+                    <div class="input-with-unit">
+                        <input
+                            type="number"
+                            class="usage-input"
+                            placeholder="55"
+                            min="0"
+                            max="100"
+                            step="0.1"
+                        >
+                        <span>%</span>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="delete-btn"
+                        onclick="removePitchRow(this)"
+                        aria-label="구종 삭제"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <div class="pitch-row">
+
+                    <select class="pitch-type">
+                        <option value="SL" selected>슬라이더</option>
+                        <option value="FF">포심</option>
+                        <option value="SI">싱커</option>
+                        <option value="FC">커터</option>
+                        <option value="ST">스위퍼</option>
+                        <option value="CU">커브</option>
+                        <option value="KC">너클커브</option>
+                        <option value="CH">체인지업</option>
+                        <option value="FS">스플리터</option>
+                    </select>
+
+                    <div class="input-with-unit">
+                        <input
+                            type="number"
+                            class="velocity-input"
+                            placeholder="125"
+                            min="0"
+                            max="200"
+                            step="0.1"
+                        >
+                        <span>km/h</span>
+                    </div>
+
+                    <div class="input-with-unit">
+                        <input
+                            type="number"
+                            class="usage-input"
+                            placeholder="30"
+                            min="0"
+                            max="100"
+                            step="0.1"
+                        >
+                        <span>%</span>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="delete-btn"
+                        onclick="removePitchRow(this)"
+                        aria-label="구종 삭제"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <div class="pitch-row">
+
+                    <select class="pitch-type">
+                        <option value="CH" selected>체인지업</option>
+                        <option value="FF">포심</option>
+                        <option value="SI">싱커</option>
+                        <option value="FC">커터</option>
+                        <option value="SL">슬라이더</option>
+                        <option value="ST">스위퍼</option>
+                        <option value="CU">커브</option>
+                        <option value="KC">너클커브</option>
+                        <option value="FS">스플리터</option>
+                    </select>
+
+                    <div class="input-with-unit">
+                        <input
+                            type="number"
+                            class="velocity-input"
+                            placeholder="120"
+                            min="0"
+                            max="200"
+                            step="0.1"
+                        >
+                        <span>km/h</span>
+                    </div>
+
+                    <div class="input-with-unit">
+                        <input
+                            type="number"
+                            class="usage-input"
+                            placeholder="15"
+                            min="0"
+                            max="100"
+                            step="0.1"
+                        >
+                        <span>%</span>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="delete-btn"
+                        onclick="removePitchRow(this)"
+                        aria-label="구종 삭제"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div id="usage-message" class="message"></div>
+
+
+            <button
+                type="button"
+                class="add-pitch-btn"
+                onclick="addPitchRow()"
+            >
+                <span>＋</span>
+                구종 추가
+            </button>
+
+
+            <div class="form-actions">
+
+                <button
+                    type="button"
+                    id="search-btn"
+                    class="primary-btn"
+                    onclick="searchPitchers()"
+                >
+                    유사 MLB 투수 찾기
+                    <span>→</span>
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================= -->
+    <!-- SECTION 2 : Top 5 -->
+    <!-- ============================= -->
+
+    <section
+        id="results-section"
+        class="page-section hidden"
+    >
+
+        <div class="section-title-row">
+
+            <div>
+                <div class="section-badge">
+                    SEARCH RESULT
+                </div>
+
+                <h2>유사 MLB 투수</h2>
+
+                <p>
+                    현재 백엔드에서 계산된 순서를 그대로 표시합니다.
+                </p>
+            </div>
+
+            <button
+                type="button"
+                class="secondary-btn"
+                onclick="backToInput()"
+            >
+                ← 다시 입력
+            </button>
+
+        </div>
+
+
+        <div id="loading-box" class="loading-box hidden">
+
+            <div class="spinner"></div>
+
+            <p>
+                MLB Statcast 데이터를 분석하고 있습니다...
+            </p>
+
+        </div>
+
+
+        <div id="results-container" class="results-grid"></div>
+
+
+        <div
+            id="results-empty"
+            class="empty-box hidden"
+        >
+            검색 결과가 없습니다.
+        </div>
+
+    </section>
+
+
+    <!-- ============================= -->
+    <!-- SECTION 3 : 상세 비교 -->
+    <!-- ============================= -->
+
+    <section
+        id="detail-section"
+        class="page-section hidden"
+    >
+
+        <div class="section-title-row">
+
+            <div>
+                <div class="section-badge">
+                    DETAILED COMPARISON
+                </div>
+
+                <h2 id="detail-title">
+                    내 투수 vs MLB 투수
+                </h2>
+
+                <p>
+                    구종 구성, 사용률, 평균 구속과 A/U/V 지표를 비교합니다.
+                </p>
+            </div>
+
+            <button
+                type="button"
+                class="secondary-btn"
+                onclick="backToResults()"
+            >
+                ← Top 5
+            </button>
+
+        </div>
+
+
+        <!-- 구종 비교 -->
+
+        <div class="panel">
+
+            <div class="panel-header detail-panel-header">
+
+                <div>
+                    <h3>구종 비교</h3>
+
+                    <p>
+                        절대 구속 차이보다 구종별 상대적인 구속 구조를 참고하기 위한 비교입니다.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="comparison-table-wrap">
+
+                <table class="comparison-table">
+
+                    <thead>
+                        <tr>
+                            <th>구종</th>
+                            <th>내 사용률</th>
+                            <th>MLB 사용률</th>
+                            <th>내 평균 구속</th>
+                            <th>MLB 평균 구속</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="comparison-body"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- A -->
+
+        <div class="score-card">
+
+            <div class="score-card-top">
+
+                <div>
+                    <span class="score-code">A</span>
+                    <span class="score-name">구종 구성</span>
+                </div>
+
+                <strong
+                    id="score-A"
+                    class="score-number"
+                >
+                    -
+                </strong>
+
+            </div>
+
+            <div class="score-bar">
+                <div
+                    id="bar-A"
+                    class="score-fill"
+                    style="width: 0%"
+                ></div>
+            </div>
+
+            <p>
+                두 투수가 사용하는 주요 구종이 얼마나 비슷한지 나타냅니다.
+            </p>
+
+        </div>
+
+
+        <!-- U -->
+
+        <div class="score-card">
+
+            <div class="score-card-top">
+
+                <div>
+                    <span class="score-code">U</span>
+                    <span class="score-name">사용률</span>
+                </div>
+
+                <strong
+                    id="score-U"
+                    class="score-number"
+                >
+                    -
+                </strong>
+
+            </div>
+
+            <div class="score-bar">
+                <div
+                    id="bar-U"
+                    class="score-fill"
+                    style="width: 0%"
+                ></div>
+            </div>
+
+            <p>
+                같은 구종을 얼마나 비슷한 비율로 사용하는지 나타냅니다.
+            </p>
+
+        </div>
+
+
+        <!-- V -->
+
+        <div class="score-card">
+
+            <div class="score-card-top">
+
+                <div>
+                    <span class="score-code">V</span>
+                    <span class="score-name">구속 구조</span>
+                </div>
+
+                <strong
+                    id="score-V"
+                    class="score-number"
+                >
+                    -
+                </strong>
+
+            </div>
+
+            <div class="score-bar">
+                <div
+                    id="bar-V"
+                    class="score-fill"
+                    style="width: 0%"
+                ></div>
+            </div>
+
+            <p>
+                각 구종 사이의 상대적인 구속 차이가 MLB 비교 집단에서
+                얼마나 유사한지를 나타냅니다.
+            </p>
+
+            <div class="score-note">
+                ※ V는 확률이 아니라 유사도 지표입니다.
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <p>
+        PitchLab · MLB Statcast 기반 투구 레퍼토리 비교 프로젝트
+    </p>
+
+</footer>
+
+
+<script
+    src="{{ url_for('static', filename='script.js') }}"
+></script>
+
+</body>
+</html>
