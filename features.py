@@ -6,7 +6,7 @@ from itertools import combinations
 # 1. 데이터 불러오기
 # =========================
 
-df = pd.read_csv(Path(__file__).resolve().parent.parent / "data" / "savant_2024.csv")
+df = pd.read_csv(Path(__file__).resolve().parent / "data" / "savant_2024.csv")
 
 SUPPORTED_PITCHES = ["FF", "SI", "FC", "SL", "ST", "CU", "KC", "CH", "FS"]
 
